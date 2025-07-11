@@ -1,8 +1,12 @@
 import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
+
 import Navbar from './components/Navbar'
 
 import HomePage from './pages/HomePage'
+import MySeshPage from './pages/MySeshPage'
+import SeshCenterPage from './pages/SeshCenterPage'
+import AboutPage from './pages/AboutPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 
@@ -11,9 +15,17 @@ function App() {
 
   return (
     <>
-    <div className='flex flex-col'>
-      <Navbar/>
-    </div>
+    
+    <Navbar/>
+    <Routes>
+      <Route path='/' element={<HomePage />} />
+      <Route path='/about' element={<AboutPage />} />
+      <Route path='/mysesh' element={<MySeshPage />} />
+      <Route path='/seshcenter' element={<SeshCenterPage />} />
+      <Route path='/login' element={<LoginPage />} />
+      <Route path='/signup' element={<SignupPage />} />
+    </Routes>
+    
     </>
   )
 }

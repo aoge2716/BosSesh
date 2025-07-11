@@ -9,6 +9,8 @@ const navigation = [
   { name: 'About', href: '/about', current: false },
   { name: 'MySesh', href: '/mysesh', current: false },
   { name: 'SeshCenter', href: '/seshcenter', current: false },
+  { name: 'Login', href:'/login', current: false},
+  { name: 'Signup', href:'/signup', current: false},
 ]
 
 function classNames(...classes) {
