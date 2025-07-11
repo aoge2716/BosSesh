@@ -9,6 +9,7 @@ import SeshCenterPage from './pages/SeshCenterPage'
 import AboutPage from './pages/AboutPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
+import ResetRequestPage from './pages/ResetRequestPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -24,8 +25,8 @@ function App() {
       <Route path='/seshcenter' element={<SeshCenterPage />} />
       <Route path='/login' element={<LoginPage />} />
       <Route path='/signup' element={<SignupPage />} />
+      <Route path='/resetrequest' element={<ResetRequestPage />} />
     </Routes>
-    
     </>
   )
 }
