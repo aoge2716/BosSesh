@@ -3,10 +3,15 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../service/firebase';
 import { collection, query, where, getDocs, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify';
+import { useAuth } from '../context/AuthContext';
+
+
 
 const  LoginPage  = () =>{
   const navigate = useNavigate();
+  const { userData } =useAuth();
   const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
     identifier:'',
@@ -36,6 +41,7 @@ const  LoginPage  = () =>{
       }
 
       await signInWithEmailAndPassword(auth, emailToLogin, password);
+      toast.success("Welcome back " + userData.username)
       navigate('/seshcenter')
     }catch(err){
       if (err.message === 'Firebase: Error (auth/invalid-credential).'){
@@ -43,7 +49,6 @@ const  LoginPage  = () =>{
       }else{
         setErrorMessage('Login failed ' + err.message);
       }
-      console.log(err.message)
     }
   }
 

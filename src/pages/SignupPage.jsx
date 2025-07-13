@@ -1,20 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { db, auth } from '../service/firebase';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useAuth } from '../context/AuthContext';
 
 
 const SignupPage = () =>{
   const [errorMessage, setErrorMessage] = useState(''); 
   const navigate = useNavigate();
+  const { userData } = useAuth();
   const [formData, setFormData] =useState({
     username: '',
     email: '',
     password:'',
     repass:''
   });
+
+  useEffect(()=>{
+    if (userData){
+      toast.success("Welcome to Bo's Sesh " + userData.username);
+      navigate('/seshcenter');
+    }
+  },[userData,navigate]);
 
   const handleChange= e=>{
     setFormData({
@@ -63,9 +73,7 @@ const SignupPage = () =>{
         email: formData.email,
         createdAt: new Date()
       })
-
-      navigate('/seshcenter');
-      console.log(response)
+            
     }catch(err){
       setErrorMessage(err.message)
     }

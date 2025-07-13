@@ -1,12 +1,13 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../service/firebase';
 import { toast } from 'react-toastify';
 import logo from '../assets/logo.png';
 import avatar from '../assets/avatar.png';
+import { useEffect, useState } from 'react';
 
 
 
@@ -18,30 +19,28 @@ function classNames(...classes) {
 
 const Navbar = ()=>{
   const location = useLocation();
-  const { user } = useAuth();
-  const navigate = useNavigate(); 
-  const navigation = user 
-  ?[
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-    { name: 'MySesh', href: '/mysesh' },
-    { name: 'SeshCenter', href: '/seshcenter' },
-  ]
-  :[
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
-  ];
+  const { user, userData, logOut } = useAuth();
+  const [ currentUser, setCurrentUser] = useState('')
+  const navigation = user
+    ?[
+      { name: 'Home', href: '/' },
+      { name: 'About', href: '/about' },
+      { name: 'MySesh', href: '/mysesh' },
+      { name: 'SeshCenter', href: '/seshcenter' },
+    ]
+    :[
+      { name: 'Home', href: '/' },
+      { name: 'About', href: '/about' },
+    ];
 
   const handleLogout = async () => {
-    try{
-      await signOut(auth);
-      toast.success('logged out successfully');
-      navigate('/');      
-    } catch (err){
-      toast.error('logout failed: ', err);
-      console.log('logout err:'+ err)
-    }
+    await logOut();
+    
   }
+
+  useEffect(()=>{
+    setCurrentUser(userData?.username)
+  },[userData])
   return (
     <Disclosure as="nav" className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -121,7 +120,7 @@ const Navbar = ()=>{
                         href="/profile"
                         className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                       >
-                        Your Profile
+                        {currentUser}'s Profile
                       </a>
                     </MenuItem>
                     <MenuItem>
