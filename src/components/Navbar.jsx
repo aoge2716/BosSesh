@@ -1,17 +1,16 @@
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Link, useLocation } from 'react-router-dom'
-import logo from '../assets/logo.png'
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { signOut } from 'firebase/auth';
+import { auth } from '../service/firebase';
+import { toast } from 'react-toastify';
+import logo from '../assets/logo.png';
+import avatar from '../assets/avatar.png';
 
 
-const navigation = [
-  { name: 'Home', href: '/', current: true },
-  { name: 'About', href: '/about', current: false },
-  { name: 'MySesh', href: '/mysesh', current: false },
-  { name: 'SeshCenter', href: '/seshcenter', current: false },
-  { name: 'Login', href:'/login', current: false},
-  { name: 'Signup', href:'/signup', current: false},
-]
+
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -19,7 +18,30 @@ function classNames(...classes) {
 
 const Navbar = ()=>{
   const location = useLocation();
+  const { user } = useAuth();
+  const navigate = useNavigate(); 
+  const navigation = user 
+  ?[
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+    { name: 'MySesh', href: '/mysesh' },
+    { name: 'SeshCenter', href: '/seshcenter' },
+  ]
+  :[
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+  ];
 
+  const handleLogout = async () => {
+    try{
+      await signOut(auth);
+      toast.success('logged out successfully');
+      navigate('/');      
+    } catch (err){
+      toast.error('logout failed: ', err);
+      console.log('logout err:'+ err)
+    }
+  }
   return (
     <Disclosure as="nav" className="bg-gray-800">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -83,7 +105,7 @@ const Navbar = ()=>{
                   <span className="sr-only">Open user menu</span>
                   <img
                     alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    src={avatar}
                     className="size-8 rounded-full"
                   />
                 </MenuButton>
@@ -92,32 +114,56 @@ const Navbar = ()=>{
                 transition
                 className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
               >
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                  >
-                    Your Profile
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                  >
-                    Settings
-                  </a>
-                </MenuItem>
-                <MenuItem>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                  >
-                    Sign out
-                  </a>
-                </MenuItem>
+                {user ? (
+                  <>
+                    <MenuItem>
+                      <a
+                        href="/profile"
+                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                      >
+                        Your Profile
+                      </a>
+                    </MenuItem>
+                    <MenuItem>
+                      <a
+                        href="/setting"
+                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                      >
+                        Settings
+                      </a>
+                    </MenuItem>
+                    <MenuItem>
+                      <a
+                        onClick={handleLogout}
+                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                      >
+                        Log out
+                      </a>
+                    </MenuItem>
+                  </>
+                ):(
+                  <>
+                  <MenuItem>
+                      <a
+                        href="/login"
+                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                      >
+                        Login
+                      </a>
+                    </MenuItem>
+                    <MenuItem>
+                      <a
+                        href='/signup'
+                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                      >
+                        Signup
+                      </a>
+                    </MenuItem>
+                  </>
+                )}
               </MenuItems>
             </Menu>
+              
           </div>
         </div>
       </div>

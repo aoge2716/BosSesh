@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
-
+import 'react-toastify/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
 import Navbar from './components/Navbar'
 
 import HomePage from './pages/HomePage'
@@ -27,6 +28,8 @@ function App() {
       <Route path='/signup' element={<SignupPage />} />
       <Route path='/resetrequest' element={<ResetRequestPage />} />
     </Routes>
+
+    <ToastContainer />
     </>
   )
 }
