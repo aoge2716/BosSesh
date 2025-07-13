@@ -64,7 +64,7 @@ const SignupPage = () =>{
         createdAt: new Date()
       })
 
-      navigate('/');
+      navigate('/seshcenter');
       console.log(response)
     }catch(err){
       setErrorMessage(err.message)
